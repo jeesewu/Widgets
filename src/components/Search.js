@@ -25,22 +25,24 @@ const Search = () => {
 
   const renderedResults = results.map((result) => {
     return (
-      <li key={result.pageid}>
-        <a href={`https://en.wikipedia.org/?curid=${result.pageid}`}>
+      <div key={result.pageid} className="item">
+        <a href={`https://en.wikipedia.org?curid=${result.pageid}`}>
           <h3>{result.title}</h3>
         </a>
-        <p dangerouslySetInnerHTML={{ __html: result.snippet }}></p>
-      </li>
+        <span dangerouslySetInnerHTML={{ __html: result.snippet }}></span>
+      </div>
     );
   });
 
   return (
     <div>
-      <form onSubmit={handleFormSubmit}>
-        <label>Search Wiki</label>
-        <input type="text" value={term} onChange={handleTermChange} />
+      <form className="ui form" onSubmit={handleFormSubmit}>
+        <div className="field">
+          <label>Search Wiki</label>
+          <input value={term} onChange={handleTermChange} className="input" />
+        </div>
       </form>
-      <ul>{renderedResults}</ul>
+      <div className="ui celled list">{renderedResults}</div>
     </div>
   );
 };
