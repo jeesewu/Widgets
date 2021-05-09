@@ -3,6 +3,7 @@ import axios from "axios";
 
 const Search = () => {
   const [term, setTerm] = useState("");
+  const [results, setResults] = useState([]);
 
   const handleTermChange = (event) => {
     setTerm(event.target.value);
@@ -19,9 +20,19 @@ const Search = () => {
         srsearch: term,
       },
     });
-
-    console.log(response);
+    setResults(response.data.query.search);
   };
+
+  const renderedResults = results.map((result) => {
+    return (
+      <li key={result.pageid}>
+        <a href={`https://en.wikipedia.org/?curid=${result.pageid}`}>
+          <h3>{result.title}</h3>
+        </a>
+        <p dangerouslySetInnerHTML={{ __html: result.snippet }}></p>
+      </li>
+    );
+  });
 
   return (
     <div>
@@ -29,12 +40,7 @@ const Search = () => {
         <label>Search Wiki</label>
         <input type="text" value={term} onChange={handleTermChange} />
       </form>
-      <ul>
-        <li>
-          <h3>React</h3>
-          <p>React is a JavaScript library for building user interfaces.</p>
-        </li>
-      </ul>
+      <ul>{renderedResults}</ul>
     </div>
   );
 };
