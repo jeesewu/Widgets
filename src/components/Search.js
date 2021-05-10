@@ -3,11 +3,22 @@ import axios from "axios";
 
 const Search = () => {
   const [term, setTerm] = useState("");
+  const [debouncedTerm, setDebouncedTerm] = useState(term);
   const [results, setResults] = useState([]);
 
   const handleInputTextChange = (event) => {
     setTerm(event.target.value);
   };
+
+  useEffect(() => {
+    const timerId = setTimeout(() => {
+      setDebouncedTerm(term);
+    }, 1000);
+
+    return () => {
+      clearTimeout(timerId);
+    };
+  }, [term]);
 
   useEffect(() => {
     const search = async () => {
@@ -17,22 +28,15 @@ const Search = () => {
           list: "search",
           origin: "*",
           format: "json",
-          srsearch: term,
+          srsearch: debouncedTerm,
         },
       });
       setResults(response.data.query.search);
     };
-
-    const timerId = setTimeout(() => {
-      if (term) {
-        search();
-      }
-    }, 1000);
-
-    return () => {
-      clearTimeout(timerId);
-    };
-  }, [term]);
+    if (debouncedTerm) {
+      search();
+    }
+  }, [debouncedTerm]);
 
   const renderedResults = results.map((result) => {
     return (
@@ -47,7 +51,7 @@ const Search = () => {
 
   return (
     <div>
-      <form className="ui form">
+      <div className="ui form">
         <div className="field">
           <label>Search Wiki</label>
           <input
@@ -56,7 +60,7 @@ const Search = () => {
             className="input"
           />
         </div>
-      </form>
+      </div>
       <div className="ui celled list">{renderedResults}</div>
     </div>
   );
