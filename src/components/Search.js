@@ -1,27 +1,37 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 
 const Search = () => {
+  const [text, setText] = useState("");
   const [term, setTerm] = useState("");
   const [results, setResults] = useState([]);
 
-  const handleInputTermChange = (event) => {
-    setTerm(event.target.value);
+  const handleInputTextChange = (event) => {
+    setText(event.target.value);
   };
 
-  const handleFormSubmit = async (event) => {
+  const handleFormSubmit = (event) => {
     event.preventDefault();
-    const response = await axios.get("https://en.wikipedia.org/w/api.php", {
-      params: {
-        action: "query",
-        list: "search",
-        origin: "*",
-        format: "json",
-        srsearch: term,
-      },
-    });
-    setResults(response.data.query.search);
+    setTerm(text);
   };
+
+  useEffect(() => {
+    if (term) {
+      const search = async () => {
+        const response = await axios.get("https://en.wikipedia.org/w/api.php", {
+          params: {
+            action: "query",
+            list: "search",
+            origin: "*",
+            format: "json",
+            srsearch: term,
+          },
+        });
+        setResults(response.data.query.search);
+      };
+      search();
+    }
+  }, [term]);
 
   const renderedResults = results.map((result) => {
     return (
@@ -40,8 +50,8 @@ const Search = () => {
         <div className="field">
           <label>Search Wiki</label>
           <input
-            value={term}
-            onChange={handleInputTermChange}
+            value={text}
+            onChange={handleInputTextChange}
             className="input"
           />
         </div>
