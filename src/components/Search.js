@@ -2,17 +2,11 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 
 const Search = () => {
-  const [text, setText] = useState("");
   const [term, setTerm] = useState("");
   const [results, setResults] = useState([]);
 
   const handleInputTextChange = (event) => {
-    setText(event.target.value);
-  };
-
-  const handleFormSubmit = (event) => {
-    event.preventDefault();
-    setTerm(text);
+    setTerm(event.target.value);
   };
 
   useEffect(() => {
@@ -46,11 +40,11 @@ const Search = () => {
 
   return (
     <div>
-      <form className="ui form" onSubmit={handleFormSubmit}>
+      <form className="ui form">
         <div className="field">
           <label>Search Wiki</label>
           <input
-            value={text}
+            value={term}
             onChange={handleInputTextChange}
             className="input"
           />
