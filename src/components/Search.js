@@ -5,7 +5,7 @@ const Search = () => {
   const [term, setTerm] = useState("");
   const [results, setResults] = useState([]);
 
-  const handleTermChange = (event) => {
+  const handleInputTermChange = (event) => {
     setTerm(event.target.value);
   };
 
@@ -39,7 +39,11 @@ const Search = () => {
       <form className="ui form" onSubmit={handleFormSubmit}>
         <div className="field">
           <label>Search Wiki</label>
-          <input value={term} onChange={handleTermChange} className="input" />
+          <input
+            value={term}
+            onChange={handleInputTermChange}
+            className="input"
+          />
         </div>
       </form>
       <div className="ui celled list">{renderedResults}</div>
