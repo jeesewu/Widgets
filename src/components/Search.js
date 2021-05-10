@@ -10,21 +10,28 @@ const Search = () => {
   };
 
   useEffect(() => {
-    if (term) {
-      const search = async () => {
-        const response = await axios.get("https://en.wikipedia.org/w/api.php", {
-          params: {
-            action: "query",
-            list: "search",
-            origin: "*",
-            format: "json",
-            srsearch: term,
-          },
-        });
-        setResults(response.data.query.search);
-      };
-      search();
-    }
+    const search = async () => {
+      const response = await axios.get("https://en.wikipedia.org/w/api.php", {
+        params: {
+          action: "query",
+          list: "search",
+          origin: "*",
+          format: "json",
+          srsearch: term,
+        },
+      });
+      setResults(response.data.query.search);
+    };
+
+    const timerId = setTimeout(() => {
+      if (term) {
+        search();
+      }
+    }, 1000);
+
+    return () => {
+      clearTimeout(timerId);
+    };
   }, [term]);
 
   const renderedResults = results.map((result) => {
